@@ -13,7 +13,10 @@ class1 = pickle.load((open('class.pkl', 'rb')))
 y = to_categorical(labelencoder.fit_transform(class1))
 
 # Load the model
-model = pickle.load((open('model.pkl', 'rb')))
+try:
+    model = pickle.load(open('model.pkl', 'rb'))
+except ValueError:
+    model = None  # Assign None if the model loading fails
 
 
 def features_extractor(file):
