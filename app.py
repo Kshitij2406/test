@@ -15,7 +15,7 @@ y = to_categorical(labelencoder.fit_transform(class1))
 
 # Load the model
 # model = pickle.load((open('model.pkl', 'rb')))
-model = tf.keras.models.load_model("../models/1")
+model = tf.keras.models.load_model("/models/1")
 
 def features_extractor(file):
     audio, sample_rate = librosa.load(file)
