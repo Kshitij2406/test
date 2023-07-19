@@ -15,7 +15,7 @@ y = to_categorical(labelencoder.fit_transform(class1))
 # Load the model
 try:
     model = pickle.load(open('model.pkl', 'rb'))
-except ValueError:
+except (FileNotFoundError, ValueError):
     model = None  # Assign None if the model loading fails
 
 
@@ -33,11 +33,12 @@ def detect_sound(filename):
     mfccs_features = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
     mfccs_scaled_features = np.mean(mfccs_features.T, axis=0)
     mfccs_scaled_features = mfccs_scaled_features.reshape(1, -1)
-    predicted_label = np.argmax(model.predict(mfccs_scaled_features), axis=-1)
-    prediction_class = labelencoder.inverse_transform(predicted_label)
-    # print(prediction_class)
-    formatted_prediction = prediction_class[0].replace("_", " ").title()
-    return formatted_prediction
+    if model is not None:
+        predicted_label = np.argmax(model.predict(mfccs_scaled_features), axis=-1)
+        prediction_class = labelencoder.inverse_transform(predicted_label)
+        return prediction_class[0]
+    else:
+        return "Model not found. Unable to perform sound detection."
 
 
 # Streamlit app
